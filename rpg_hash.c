@@ -84,6 +84,17 @@ int rpg_hash_get_string(struct _rpg_hash *hash, char *key, char **out_value) {
 	return SUCCESS;
 }
 
+int rpg_hash_get_tm(struct _rpg_hash *hash, char *key, struct tm **out_value) {
+	int ret;
+    
+	void *data;
+	ret = rpg_hash_get(hash, key, &data);ENSURE_SUCCEEDED
+    
+	*out_value = (struct tm *)data;
+    
+	return SUCCESS;
+}
+
 int rpg_hash_set( apr_pool_t *p, struct _rpg_hash *hash, char *key, void *value ) {
 	struct _rpg_hash_item *hash_item=NULL;
 

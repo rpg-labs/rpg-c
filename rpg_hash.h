@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+
 #include "rpg.h"
 #include "rpg_string_list.h"
 
@@ -11,6 +13,7 @@
 #define RPG_HASH_SET_STRING(h, k, v) ret = rpg_hash_set_string(p,h,k,v);ENSURE_SUCCEEDED
 #define RPG_HASH_GET(h, k, v) ret = rpg_hash_get(h,k,&v);ENSURE_SUCCEEDED
 #define RPG_HASH_GET_STRING(h, k, v) ret = rpg_hash_get_string(h,k,&v);ENSURE_SUCCEEDED
+#define RPG_HASH_GET_TM(h, k, v) ret = rpg_hash_get_tm(h,k,&v);ENSURE_SUCCEEDED
 #define RPG_HASH_DEL(h, k) ret = rpg_hash_del(h,k);ENSURE_SUCCEEDED
 
 #define RPG_JSON_TO_HASH_OF_STRINGS(h,sl) ret = rpg_json_to_hash_of_strings(h,sl);ENSURE_SUCCEEDED
