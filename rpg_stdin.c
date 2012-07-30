@@ -8,7 +8,9 @@ int read_line_from_stdin( apr_pool_t *p, int max_line_size, char **out_eof, char
 
 	char *eof = fgets(line, max_line_size, stdin);
 	int index = strlen( line );
-	line[index-1] = '\0';//chomp the newline character
+    if ( index > 0 && line[index-1] == '\n' ) {
+        line[index-1] = '\0';//chomp the newline character
+    }
 
 	*out_line = line;
 	*out_eof = eof;
@@ -29,7 +31,6 @@ int read_stdin(apr_pool_t *p, int max_line_size, struct _rpg_string_list **out_l
 
 	while ( loop ) {
 		ret = read_line_from_stdin( p, max_line_size, &eof, &line );ENSURE_SUCCEEDED
-		RPG_STRING_LIST_ADD(l, line)
 
 		if ( eof == NULL ) {
 			if ( ferror( stdin ) ) {
@@ -37,6 +38,8 @@ int read_stdin(apr_pool_t *p, int max_line_size, struct _rpg_string_list **out_l
 				return FAILED;
 			}
 			loop = 0;
+        } else {
+            RPG_STRING_LIST_ADD(l, line)
 		}
 	}
 	
