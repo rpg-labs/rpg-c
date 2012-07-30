@@ -25,3 +25,18 @@ int rpg_parse_tm( apr_pool_t *p, char *buffer, char *format, struct tm **out_tm 
 	*out_tm = tm;
 	return SUCCESS;
 }
+
+int rpg_cmp_tm(struct tm *t1, struct tm *t2) {
+#define CHK_LESS(l,r) if ( l < r ) { return -1; }
+#define CHK_MORE(l,r) if ( l > r ) { return 1; }
+#define CHK(l,r) CHK_LESS(l,r);CHK_MORE(l,r)
+
+    CHK( t1->tm_year, t2->tm_year );
+    CHK( t1->tm_mon, t2->tm_mon );
+    CHK( t1->tm_mday, t2->tm_mday );
+    CHK( t1->tm_hour, t2->tm_hour );
+    CHK( t1->tm_min, t2->tm_min );
+    CHK( t1->tm_sec, t2->tm_sec );
+
+    return 0;
+}

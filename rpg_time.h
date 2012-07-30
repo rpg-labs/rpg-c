@@ -24,6 +24,8 @@ static const unsigned short rpg_ydays[2][13] = {
 #define RPG_YEAR_DAYS_TM(tm) rpg_year_days( tm->tm_mday, tm->tm_mon, tm->tm_year )
 #define RPG_PARSE_TM(b,f,t) rpg_parse_tm( p, b,f,&t );ENSURE_SUCCEEDED
 
+#define RPG_CMP_TM(t1,t2) rpg_cmp_tm(t1,t2)
+
 #define RPG_STD_DATE_FMT "%d %b %Y"
 
 /*
