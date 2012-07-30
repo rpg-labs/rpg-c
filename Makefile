@@ -29,6 +29,7 @@ test-rpg_json_import: compile
 test: compile-tests
 	./test/test_rpg_hash
 	./test/test_rpg_string_list
+	./test/test-rpg_json_import
 
 install: compile
 	cp *.h /usr/local/include

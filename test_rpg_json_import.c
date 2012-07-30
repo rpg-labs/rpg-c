@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "rpg_cunit.h"
@@ -17,19 +18,19 @@ void test_find_index_of_char(void)
 	char *s = "  A  B  C  D  E  F  G";
 
 	i=0;
-	ret = rpg_json_import_chrpos( s, strlen( s ), 'A', &i );RPG_CU_FNC_CHECK
+	ret = chrpos( s, strlen( s ), 'A', &i );RPG_CU_FNC_CHECK
 	CU_ASSERT_EQUAL( 2, i );
 
 	i=3;
-	ret = rpg_json_import_chrpos( s, strlen( s ), 'B', &i );RPG_CU_FNC_CHECK
+	ret = chrpos( s, strlen( s ), 'B', &i );RPG_CU_FNC_CHECK
 	CU_ASSERT_TRUE( i == 5 );
 
 	i=0;
-	ret = rpg_json_import_chrpos( s, strlen( s ), 'B', &i );RPG_CU_FNC_CHECK
+	ret = chrpos( s, strlen( s ), 'B', &i );RPG_CU_FNC_CHECK
 	CU_ASSERT_TRUE( i == -1 );
 
 	i=0;
-	ret = rpg_json_import_chrpos( s, strlen( s ), 'H', &i );RPG_CU_FNC_CHECK
+	ret = chrpos( s, strlen( s ), 'H', &i );RPG_CU_FNC_CHECK
 	CU_ASSERT_TRUE( i == -1 );
 }
 
@@ -39,19 +40,19 @@ int test_find_index_of_starting_points_mrv() { //mask_return_value
 	int i;
 
 	i=0;
-	RPG_JSON_IMPORT_ATTRIBUTE_LIST(s,strlen(s),i);RPG_CU_FNC_CHECK
+	ATTRIBUTE_LIST(s,strlen(s),i);RPG_CU_FNC_CHECK
 	CU_ASSERT_EQUAL( 2, i );
 
 	i=3;
-	RPG_JSON_IMPORT_ATTRIBUTE_LIST(s,strlen(s),i);RPG_CU_FNC_CHECK
+	ATTRIBUTE_LIST(s,strlen(s),i);RPG_CU_FNC_CHECK
 	CU_ASSERT_EQUAL( -1, i );
 
 	i=2;
-	RPG_JSON_IMPORT_START_OF_ATTR(s,strlen(s),i);RPG_CU_FNC_CHECK
+	START_OF_ATTR(s,strlen(s),i);RPG_CU_FNC_CHECK
 	CU_ASSERT_EQUAL( 3, i );
 
 	i=0;
-	RPG_JSON_IMPORT_START_OF_ATTR(s,strlen(s),i);RPG_CU_FNC_CHECK
+	START_OF_ATTR(s,strlen(s),i);RPG_CU_FNC_CHECK
 	CU_ASSERT_EQUAL( -1, i );
 
 	return SUCCESS;
@@ -69,11 +70,11 @@ int test_find_index_of_attibutes_mrv() { //mask_return_value
 	int i;
 
 	i=3;
-	RPG_JSON_IMPORT_END_OF_NAME(s,strlen(s),i);RPG_CU_FNC_CHECK
+	END_OF_NAME(s,strlen(s),i);RPG_CU_FNC_CHECK
 	CU_ASSERT_EQUAL( 5, i );
 
 	i=9;
-	RPG_JSON_IMPORT_END_OF_VALUE(s,strlen(s),i);RPG_CU_FNC_CHECK
+	END_OF_VALUE(s,strlen(s),i);RPG_CU_FNC_CHECK
 	CU_ASSERT_EQUAL( 11, i );
 
 	return SUCCESS;
@@ -95,7 +96,7 @@ int test_read_attibute_to_hash_mrv() { //mask_return_value
 	RPG_HASH_INIT(r);
 
 	i=3;
-	RPG_JSON_IMPORT_READ_ATTR_TO_HASH(s,strlen(s),i,r);
+	READ_ATTR_TO_HASH(s,strlen(s),i,r);
 	CU_ASSERT_NOT_EQUAL_FATAL( -1, i );
 	{
 		void *data;
@@ -107,7 +108,7 @@ int test_read_attibute_to_hash_mrv() { //mask_return_value
 	CU_ASSERT_EQUAL( 13, i );
 
 	i=15;
-	RPG_JSON_IMPORT_READ_ATTR_TO_HASH(s,strlen(s),i,r);
+	READ_ATTR_TO_HASH(s,strlen(s),i,r);
 	CU_ASSERT_NOT_EQUAL_FATAL( -1, i );
 	{
 		void *data;
@@ -128,6 +129,45 @@ void test_read_attibute_to_hash(void)
 }
 
 
+int test_read_null_attibute_to_hash_mrv() { //mask_return_value
+	int ret;
+	char *s = " {\"hid\":null,\"name\":\"Mangatewai\"}";
+	int i;
+	struct _rpg_hash *r;
+
+	RPG_HASH_INIT(r);
+
+	i=3;
+	READ_ATTR_TO_HASH(s,strlen(s),i,r);
+	CU_ASSERT_NOT_EQUAL_FATAL( -1, i );
+	{
+		void *data;
+//		RPG_HASH_GET(r,"hid",data);
+//		CU_ASSERT_EQUAL_FATAL( NULL, data );
+
+	}
+	CU_ASSERT_EQUAL( 12, i );
+
+	i=14;
+	READ_ATTR_TO_HASH(s,strlen(s),i,r);
+	CU_ASSERT_NOT_EQUAL_FATAL( -1, i );
+	{
+		void *data;
+		RPG_HASH_GET(r,"name",data);RPG_CU_FNC_A_PTR_CHECK( data );
+		char *value = (char *)data;
+		CU_ASSERT_STRING_EQUAL( "Mangatewai", value );
+
+	}
+	CU_ASSERT_EQUAL( 32, i );
+
+	return SUCCESS;
+}
+
+void test_read_null_attibute_to_hash(void)
+{
+	int ret = test_read_null_attibute_to_hash_mrv();
+	CU_ASSERT_EQUAL( SUCCESS, ret );
+}
 
 void test_json_import(void)
 {
@@ -200,7 +240,9 @@ int main()
    		(NULL == CU_add_test(pSuite, "test_find_index_of_starting_points", test_find_index_of_attibutes)) ||
    		(NULL == CU_add_test(pSuite, "test_read_attibute_to_hash", test_read_attibute_to_hash)) ||
    		(NULL == CU_add_test(pSuite, "test_find_index_of_char", test_find_index_of_char)) ||
-   		(NULL == CU_add_test(pSuite, "test_json_import", test_json_import))
+   		(NULL == CU_add_test(pSuite, "test_json_import", test_json_import)) ||
+   		(NULL == CU_add_test(pSuite, "test_read_null_attibute_to_hash", test_read_null_attibute_to_hash))
+   		
 
        )
    {

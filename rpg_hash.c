@@ -99,6 +99,11 @@ int rpg_hash_set(struct _rpg_hash *hash, char *key, void *value) {
 
 int rpg_hash_set_string(struct _rpg_hash *hash, char *key, char *value) {
 	int ret;
+	if ( value == NULL ) {
+		RPG_HASH_SET(hash, key, NULL);
+		return SUCCESS;
+	}
+		
 	char *buffer = (char *)malloc(strlen(value)+1);
 	strcpy( buffer, value );
 
