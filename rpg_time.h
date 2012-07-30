@@ -24,6 +24,8 @@ static const unsigned short rpg_ydays[2][13] = {
 #define RPG_YEAR_DAYS_TM(tm) rpg_year_days( tm->tm_mday, tm->tm_mon, tm->tm_year )
 #define RPG_PARSE_TM(b,f,t) rpg_parse_tm( p, b,f,&t );ENSURE_SUCCEEDED
 
+#define RPG_CLONE_TM(t1,t2) rpg_clone_tm(p, t1, &t2)
+
 #define RPG_CMP_TM(t1,t2) rpg_cmp_tm(t1,t2)
 
 #define RPG_STD_DATE_FMT "%d %b %Y"
@@ -39,5 +41,9 @@ int rpg_month_days(unsigned int month, unsigned int year);
 int rpg_year_days(unsigned int day, unsigned int month, unsigned int year);
 
 int rpg_parse_tm( apr_pool_t *p, char *buffer, char *format, struct tm **out_tm );
+
+int rpg_cmp_tm(struct tm *t1, struct tm *t2);
+
+int rpg_clone_tm( apr_pool_t *p, struct tm *in_tm, struct tm **out_tm );
 
 #endif
