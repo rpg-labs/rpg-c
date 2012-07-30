@@ -5,22 +5,24 @@
 #include "rpg_hash.c"
 
 
+apr_pool_t *p;
+
 void testJsonExport(void)
 {
 	int ret;
 	struct _rpg_hash *h;
 	
-	rpg_hash_init( &h );
-	rpg_hash_set( h, "one", "1" );
-	rpg_hash_set( h, "two", "2" );
+	rpg_hash_init( p, &h );
+	rpg_hash_set( p, h, "one", "1" );
+	rpg_hash_set( p, h, "two", "2" );
 
 	struct _rpg_string_list *sl;
-	rpg_string_list_init(&sl);
+	rpg_string_list_init(p, &sl);
 	
-	ret = rpg_hash_of_strings_to_json( h, sl );
+	ret = rpg_hash_of_strings_to_json( p, h, sl );
 
 	char *s;
-	ret = rpg_string_list_to_string(sl, &s);
+	ret = rpg_string_list_to_string( p, sl, &s );
 
 	CU_ASSERT_STRING_EQUAL( "{'one':'1','two':'2'}", s );
 
@@ -55,6 +57,12 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
    }
+
+	apr_initialize();
+	if(( apr_pool_create( &p, NULL)) != APR_SUCCESS) {
+		printf( "Could not create memory sub-pool\n");
+		exit( -1);
+	}
 
    /* Run all tests using the CUnit Basic interface */
    CU_basic_set_mode(CU_BRM_VERBOSE);

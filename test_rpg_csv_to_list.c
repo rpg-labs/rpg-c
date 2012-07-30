@@ -4,6 +4,7 @@
 
 #include "rpg_csv_to_list.c"
 
+apr_pool_t *p;
 
 void testTwoValues(void)
 {
@@ -11,7 +12,7 @@ void testTwoValues(void)
 	struct _rpg_string_list *l=NULL;
 	char *line = "one,two";
 
-	ret = rpg_csv_to_list_run( line, &l );
+	ret = rpg_csv_to_list_run( p, line, &l );
 
 	CU_ASSERT(2 == l->count);
 }
@@ -22,7 +23,7 @@ void testThreeValues(void)
 	struct _rpg_string_list *l=NULL;
 	char *line = "one,two,three";
 
-	ret = rpg_csv_to_list_run( line, &l );
+	ret = rpg_csv_to_list_run( p, line, &l );
 
 	CU_ASSERT(3 == l->count);
 }
@@ -34,7 +35,7 @@ void testThreeValuesGetFirstValue(void)
 	struct _rpg_string_list *l=NULL;
 	char *line = "one,two,three";
 
-	ret = rpg_csv_to_list_run( line, &l );
+	ret = rpg_csv_to_list_run( p, line, &l );
 	CU_ASSERT(3 == l->count);
 	
 	{
@@ -51,7 +52,7 @@ void testThreeValuesGetSecondValue(void)
 	struct _rpg_string_list *l=NULL;
 	char *line = "one,two,three";
 
-	ret = rpg_csv_to_list_run( line, &l );
+	ret = rpg_csv_to_list_run( p, line, &l );
 	CU_ASSERT(3 == l->count);
 	
 	{
@@ -68,7 +69,7 @@ void testThreeValuesGetThirdValue(void)
 	struct _rpg_string_list *l=NULL;
 	char *line = "one,two,three";
 
-	ret = rpg_csv_to_list_run( line, &l );
+	ret = rpg_csv_to_list_run( p, line, &l );
 	CU_ASSERT(3 == l->count);
 	
 	{
@@ -85,7 +86,7 @@ void testThreeValuesGetFourthValue(void)
 	struct _rpg_string_list *l=NULL;
 	char *line = "one,two,three";
 
-	ret = rpg_csv_to_list_run( line, &l );
+	ret = rpg_csv_to_list_run( p, line, &l );
 	CU_ASSERT(3 == l->count);
 
 	{
@@ -131,6 +132,12 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
    }
+
+	apr_initialize();
+	if(( apr_pool_create( &p, NULL)) != APR_SUCCESS) {
+		printf( "Could not create memory sub-pool\n");
+		exit( -1);
+	}
 
    /* Run all tests using the CUnit Basic interface */
    CU_basic_set_mode(CU_BRM_VERBOSE);

@@ -5,17 +5,19 @@
 #include "rpg_string_list.c"
 
 
+apr_pool_t *p;
+
 void testRpgStringListToString(void)
 {
 	int ret;
 
 	struct _rpg_string_list *sl;
-	ret = rpg_string_list_init(&sl);
-	ret = rpg_string_list_add(sl, "one" );
-	ret = rpg_string_list_add(sl, "two" );
+	ret = rpg_string_list_init(p,&sl);
+	ret = rpg_string_list_add(p,sl, "one" );
+	ret = rpg_string_list_add(p,sl, "two" );
 	
 	char *s;
-	ret = rpg_string_list_to_string( sl, &s );
+	ret = rpg_string_list_to_string( p, sl, &s );
 
 	CU_ASSERT_STRING_EQUAL( "onetwo", s );
 
@@ -50,6 +52,12 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
    }
+
+	apr_initialize();
+	if(( apr_pool_create( &p, NULL)) != APR_SUCCESS) {
+		printf( "Could not create memory sub-pool\n");
+		exit( -1);
+	}
 
    /* Run all tests using the CUnit Basic interface */
    CU_basic_set_mode(CU_BRM_VERBOSE);

@@ -1,6 +1,6 @@
 #include "rpg_csv_to_list.h"
 
-int rpg_csv_to_list_run( char *line, struct _rpg_string_list **out_list ) {
+int rpg_csv_to_list_run( apr_pool_t *p, char *line, struct _rpg_string_list **out_list ) {
 
 	int ret;
 	struct _rpg_string_list *l = NULL;

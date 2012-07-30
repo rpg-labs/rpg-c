@@ -13,7 +13,7 @@
 
 #define NEXT_ATTR(b,l,i) ret = next_attr(b,l,&i);ENSURE_SUCCEEDED
 
-#define READ_ATTR_TO_HASH(b,l,i,r) ret = read_attr_to_hash(b,l,&i,r);ENSURE_SUCCEEDED
+#define READ_ATTR_TO_HASH(b,l,i,r) ret = read_attr_to_hash(p,b,l,&i,r);ENSURE_SUCCEEDED
 
 #define ENSURE_INDEX_VALID if ( i == -1 ) { *out_i = -1; return SUCCESS; }
 
@@ -105,7 +105,7 @@ int copy_string_from_buffer( char *buffer, char *string, int start, int end ) {
 	return SUCCESS;
 }
 
-int read_value_from_buffer( char *buffer, int len, int *out_i, char **out_value ) {
+int read_value_from_buffer( apr_pool_t *p, char *buffer, int len, int *out_i, char **out_value ) {
 	int i = *out_i;
 
 	while( i < len && buffer[i] == ' ' ) { i++; }; //spin through the whitespace
@@ -117,7 +117,7 @@ int read_value_from_buffer( char *buffer, int len, int *out_i, char **out_value 
 
 	if ( buffer[i] == '"' ) {
 		int ret;
-		char *value = ( char *)malloc(DEFAULT_BUFFER_SIZE);
+		char *value = (char *)apr_palloc(p, DEFAULT_BUFFER_SIZE);
 
 		i++;
 		int start=i;
@@ -145,7 +145,7 @@ int read_value_from_buffer( char *buffer, int len, int *out_i, char **out_value 
 
 }
 
-int read_attr_to_hash( char *buffer, int len, int *out_i, struct _rpg_hash *r ) {
+int read_attr_to_hash( apr_pool_t *p, char *buffer, int len, int *out_i, struct _rpg_hash *r ) {
 	int ret;
 	int i=*out_i;
 	char name[DEFAULT_BUFFER_SIZE];
@@ -159,7 +159,7 @@ int read_attr_to_hash( char *buffer, int len, int *out_i, struct _rpg_hash *r ) 
 	}
 	ATTR_DIV(buffer,len,i);ENSURE_INDEX_VALID;
 	{
-		ret = read_value_from_buffer( buffer, len, &i, &value );ENSURE_SUCCEEDED;ENSURE_INDEX_VALID
+		ret = read_value_from_buffer( p, buffer, len, &i, &value );ENSURE_SUCCEEDED;ENSURE_INDEX_VALID
 
 	}
 
@@ -170,7 +170,7 @@ int read_attr_to_hash( char *buffer, int len, int *out_i, struct _rpg_hash *r ) 
 }
 
 //{"hid":"198","name":"Mangatewai","psm":"16 Oct 2012","psc":"25 Jul 2012","mapref":""}"
-int rpg_json_import( char *b, struct _rpg_hash **out_r ) {
+int rpg_json_import( apr_pool_t *p, char *b, struct _rpg_hash **out_r ) {
 	int ret;
 	struct _rpg_hash *r;
 	int l = strlen( b );

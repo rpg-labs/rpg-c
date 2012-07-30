@@ -9,6 +9,8 @@
 #include "rpg_json_import.c"
 
 
+apr_pool_t *p;
+
 void test_find_index_of_char(void)
 {
 	int ret;
@@ -177,7 +179,7 @@ void test_json_import(void)
 
 	char *s = "{\"hid\":\"198\",\"name\":\"Mangatewai\",\"psm\":\"16 Oct 2012\",\"psc\":\"25 Jul 2012\",\"mapref\":\"\"}";
 
-	ret = rpg_json_import( s, &r );RPG_CU_FNC_A_PTR_CHECK(r);
+	ret = rpg_json_import( p, s, &r );RPG_CU_FNC_A_PTR_CHECK(r);
 
 	{
 		void *data;
@@ -249,6 +251,12 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
    }
+
+	apr_initialize();
+	if(( apr_pool_create( &p, NULL)) != APR_SUCCESS) {
+		printf( "Could not create memory sub-pool\n");
+		exit( -1);
+	}
 
    /* Run all tests using the CUnit Basic interface */
    CU_basic_set_mode(CU_BRM_VERBOSE);

@@ -4,8 +4,8 @@
 #include "rpg_string_list.h"
 
 
-int rpg_string_list_init( struct _rpg_string_list **out_new ) {
-	struct _rpg_string_list *new = ( struct _rpg_string_list * ) malloc ( sizeof(struct _rpg_string_list) );FAIL_IF_NULL(new);
+int rpg_string_list_init( apr_pool_t *p, struct _rpg_string_list **out_new ) {
+	struct _rpg_string_list *new = ( struct _rpg_string_list * ) apr_palloc ( p, sizeof(struct _rpg_string_list) );FAIL_IF_NULL(new);
 	new->first = NULL;
 	new->last = NULL;
 	new->count = 0;
@@ -15,9 +15,9 @@ int rpg_string_list_init( struct _rpg_string_list **out_new ) {
 	return SUCCESS;
 }
 
-int rpg_new_string_list_item( char *string, struct _rpg_string_list_item **out_new ) {
+int rpg_new_string_list_item( apr_pool_t *p, char *string, struct _rpg_string_list_item **out_new ) {
 	char *new_string=NULL;
-	struct _rpg_string_list_item *new = ( struct _rpg_string_list_item * ) malloc ( sizeof(struct _rpg_string_list_item) );FAIL_IF_NULL(new)
+	struct _rpg_string_list_item *new = ( struct _rpg_string_list_item * ) apr_palloc ( p, sizeof(struct _rpg_string_list_item) );FAIL_IF_NULL(new)
 	DUP_STRING(string);
 	new->data = new_string;
 	new->next = NULL;
@@ -26,9 +26,9 @@ int rpg_new_string_list_item( char *string, struct _rpg_string_list_item **out_n
 	return SUCCESS;
 }
 
-int rpg_string_list_add(struct _rpg_string_list *string_list, char *string) {
+int rpg_string_list_add(apr_pool_t *p, struct _rpg_string_list *string_list, char *string) {
 	struct _rpg_string_list_item *new=NULL;
-	int ret = rpg_new_string_list_item( string, &new );ENSURE_SUCCEEDED
+	int ret = rpg_new_string_list_item( p, string, &new );ENSURE_SUCCEEDED
 
 	if ( string_list->last == NULL ) {
 		string_list->first = new;
@@ -63,7 +63,7 @@ int rpg_string_list_get(struct _rpg_string_list *string_list, int index, char **
 	return SUCCESS;
 }
 
-int rpg_string_list_to_string(struct _rpg_string_list *string_list, char **out_string) {
+int rpg_string_list_to_string( apr_pool_t *p, struct _rpg_string_list *string_list, char **out_string ) {
 	int length=0;
 	struct _rpg_string_list_item *i=NULL;
 
@@ -76,7 +76,7 @@ int rpg_string_list_to_string(struct _rpg_string_list *string_list, char **out_s
 	}
 	
 	char *s;
-	s = ( char * ) malloc ( length );
+	s = ( char * ) apr_palloc ( p, length );
 	s[0] = '\0';
 
 	{

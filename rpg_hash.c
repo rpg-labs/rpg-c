@@ -1,7 +1,7 @@
 #include "rpg_hash.h"
 
-int rpg_hash_init( struct _rpg_hash **out_new ) {
-	struct _rpg_hash *new = ( struct _rpg_hash * ) malloc ( sizeof(struct _rpg_hash) );FAIL_IF_NULL(new);
+int rpg_hash_init( apr_pool_t *p, struct _rpg_hash **out_new ) {
+	struct _rpg_hash *new = ( struct _rpg_hash * ) apr_palloc ( p, sizeof(struct _rpg_hash) );FAIL_IF_NULL(new);
 	new->first = NULL;
 	new->last = NULL;
 	new->length = 0;
@@ -11,9 +11,9 @@ int rpg_hash_init( struct _rpg_hash **out_new ) {
 	return SUCCESS;
 }
 
-int rpg_new_hash_item( char *key, void *value, struct _rpg_hash_item **out_new ) {
+int rpg_new_hash_item( apr_pool_t *p, char *key, void *value, struct _rpg_hash_item **out_new ) {
 	char *new_string = NULL;
-	struct _rpg_hash_item *new = ( struct _rpg_hash_item * ) malloc ( sizeof(struct _rpg_hash_item) );FAIL_IF_NULL(new)
+	struct _rpg_hash_item *new = ( struct _rpg_hash_item * ) apr_palloc ( p, sizeof(struct _rpg_hash_item) );FAIL_IF_NULL(new)
 	DUP_STRING(key);
 	new->key = new_string;
 	new->value = value;
@@ -23,9 +23,9 @@ int rpg_new_hash_item( char *key, void *value, struct _rpg_hash_item **out_new )
 	return SUCCESS;
 }
 
-int rpg_add_hash_item(struct _rpg_hash *hash, char *key, void *value) {
+int rpg_add_hash_item( apr_pool_t *p, struct _rpg_hash *hash, char *key, void *value ) {
 	struct _rpg_hash_item *new=NULL;
-	int ret = rpg_new_hash_item( key, value, &new );ENSURE_SUCCEEDED
+	int ret = rpg_new_hash_item( p, key, value, &new );ENSURE_SUCCEEDED
 
 	if ( hash->last == NULL ) {
 		hash->first = new;
@@ -84,27 +84,27 @@ int rpg_hash_get_string(struct _rpg_hash *hash, char *key, char **out_value) {
 	return SUCCESS;
 }
 
-int rpg_hash_set(struct _rpg_hash *hash, char *key, void *value) {
+int rpg_hash_set( apr_pool_t *p, struct _rpg_hash *hash, char *key, void *value ) {
 	struct _rpg_hash_item *hash_item=NULL;
 
-	int ret = rpg_hash_find(hash, key, &hash_item);ENSURE_SUCCEEDED
+	int ret = rpg_hash_find( hash, key, &hash_item );ENSURE_SUCCEEDED
 	if ( hash_item != NULL ) {
 		hash_item->value = value;
 	} else {
-		ret = rpg_add_hash_item(hash, key, value);ENSURE_SUCCEEDED
+		ret = rpg_add_hash_item( p, hash, key, value );ENSURE_SUCCEEDED
 	}
 
 	return SUCCESS;
 }
 
-int rpg_hash_set_string(struct _rpg_hash *hash, char *key, char *value) {
+int rpg_hash_set_string( apr_pool_t *p, struct _rpg_hash *hash, char *key, char *value ) {
 	int ret;
 	if ( value == NULL ) {
 		RPG_HASH_SET(hash, key, NULL);
 		return SUCCESS;
 	}
 		
-	char *buffer = (char *)malloc(strlen(value)+1);
+	char *buffer = (char *)apr_palloc(p, strlen(value)+1);
 	strcpy( buffer, value );
 
 	RPG_HASH_SET(hash, key, buffer);
@@ -146,7 +146,7 @@ int rpg_hash_del(struct _rpg_hash *hash, char *key) {
 	return SUCCESS;
 }
 
-int rpg_hash_of_strings_to_json( struct _rpg_hash *hash, struct _rpg_string_list *l ) {
+int rpg_hash_of_strings_to_json( apr_pool_t *p, struct _rpg_hash *hash, struct _rpg_string_list *l ) {
 	int ret;
 
 	if ( hash == NULL ) {
@@ -174,25 +174,4 @@ int rpg_hash_of_strings_to_json( struct _rpg_hash *hash, struct _rpg_string_list
 	RPG_STRING_LIST_ADD( l, "}" );
 
 	return SUCCESS;
-}
-
-int rpg_json_to_hash_of_strings( char *buffer, struct _rpg_hash **out_r ) {
-	int ret;
-	struct _rpg_hash *r;
-	char *current=NULL;
-	int len = strlen( buffer );
-
-	RPG_HASH_INIT(r);
-
-	{
-		int i;
-		char name[DEFAULT_BUFFER_SIZE];
-		char value[DEFAULT_BUFFER_SIZE];
-		
-		for(i=1;i<--len;i++) {
-			
-		}
-	}
-	
-	
 }

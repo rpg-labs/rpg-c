@@ -3,7 +3,7 @@
 
 #include "rpg_hash.h"
 
-int rpg_json_import( char *buffer, struct _rpg_hash **out_r );
+int rpg_json_import( apr_pool_t *p, char *buffer, struct _rpg_hash **out_r );
 
 
 #endif

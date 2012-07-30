@@ -16,11 +16,11 @@ int rpg_year_days(unsigned int day, unsigned int month, unsigned int year)
 	return rpg_ydays[LEAP_YEAR(year)][month] + day;
 }
 
-int rpg_parse_tm( char *buffer, char *format, struct tm **out_tm ) {
-	struct tm *tm = (struct tm *)malloc(sizeof(struct tm));
+int rpg_parse_tm( apr_pool_t *p, char *buffer, char *format, struct tm **out_tm ) {
+	struct tm *tm = (struct tm *)apr_palloc(p, sizeof(struct tm));
 	void *data = memset(tm, 0, sizeof(struct tm));
 	
-	char *p = strptime(buffer, format, tm);FAIL_IF_NULL(p)
+	char *s = strptime(buffer, format, tm);FAIL_IF_NULL(s)
 	
 	*out_tm = tm;
 	return SUCCESS;
