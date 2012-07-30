@@ -7,7 +7,7 @@
 #ifndef RPG_CSV_TO_LIST
 #define RPG_CSV_TO_LIST 1
 
-#define RPG_CSV_TO_LIST_RUN(line,list) ret=rpg_csv_to_list_run(line, &list);ENSURE_SUCCEEDED
+#define RPG_CSV_TO_LIST_RUN(line,list) ret=rpg_csv_to_list_run(p,line, &list);ENSURE_SUCCEEDED
 
 int rpg_csv_to_list_run( apr_pool_t *p, char *line, struct _rpg_string_list **out_list );
 
