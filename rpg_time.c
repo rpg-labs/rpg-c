@@ -20,7 +20,7 @@ int rpg_parse_tm( apr_pool_t *p, char *buffer, char *format, struct tm **out_tm 
 	struct tm *tm = (struct tm *)apr_palloc(p, sizeof(struct tm));
 	void *data = memset(tm, 0, sizeof(struct tm));
 	
-	char *s = strptime(buffer, format, tm);FAIL_IF_NULL(s)
+	strptime(buffer, format, tm);
 	
 	*out_tm = tm;
 	return SUCCESS;

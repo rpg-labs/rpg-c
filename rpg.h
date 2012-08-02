@@ -1,7 +1,7 @@
 #ifndef RPG
 #define RPG 1
 
-#include <apr-1/apr_pools.h>
+#include <apr-1.0/apr_pools.h>
 
 #define FAILED 0
 #define SUCCESS -1
