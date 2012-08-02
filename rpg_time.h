@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "rpg.h"
 
@@ -28,6 +29,8 @@ static const unsigned short rpg_ydays[2][13] = {
 
 #define RPG_CMP_TM(t1,t2) rpg_cmp_tm(t1,t2)
 
+#define RPG_TM_BETWEEN(t,t1,t2) ( RPG_CMP_TM(t,t1) >= 0 && RPG_CMP_TM(t,t2) <= 0 )
+
 #define RPG_STD_DATE_FMT "%d %b %Y"
 
 /*
@@ -45,5 +48,7 @@ int rpg_parse_tm( apr_pool_t *p, char *buffer, char *format, struct tm **out_tm 
 int rpg_cmp_tm(struct tm *t1, struct tm *t2);
 
 int rpg_clone_tm( apr_pool_t *p, struct tm *in_tm, struct tm **out_tm );
+
+void rpg_print_date( char *s, struct tm *tm );
 
 #endif

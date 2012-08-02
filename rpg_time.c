@@ -28,7 +28,7 @@ int rpg_parse_tm( apr_pool_t *p, char *buffer, char *format, struct tm **out_tm 
 
 int rpg_clone_tm( apr_pool_t *p, struct tm *in_tm, struct tm **out_tm ) {
 	struct tm *tm = (struct tm *)apr_palloc(p, sizeof(struct tm));
-	void *data = memset(tm, 0, sizeof(struct tm));
+//	void *data = memset(tm, 0, sizeof(struct tm));
 
     tm->tm_sec = in_tm->tm_sec;
     tm->tm_min = in_tm->tm_min;
@@ -39,7 +39,7 @@ int rpg_clone_tm( apr_pool_t *p, struct tm *in_tm, struct tm **out_tm ) {
     tm->tm_wday = in_tm->tm_wday;
     tm->tm_yday = in_tm->tm_yday;
     tm->tm_isdst = in_tm->tm_isdst;
-	
+
 	*out_tm = tm;
 	return SUCCESS;
 }
@@ -57,4 +57,11 @@ int rpg_cmp_tm(struct tm *t1, struct tm *t2) {
     CHK( t1->tm_sec, t2->tm_sec );
 
     return 0;
+}
+
+void rpg_print_date( char *s, struct tm *tm ) {
+    char buffer[DEFAULT_BUFFER_SIZE];
+    
+    strftime (buffer,DEFAULT_BUFFER_SIZE,RPG_STD_DATE_FMT,tm);
+    printf( "%s: %s\n", s, buffer );
 }
