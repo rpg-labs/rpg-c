@@ -49,6 +49,8 @@ int rpg_cmp_tm(struct tm *t1, struct tm *t2);
 
 int rpg_clone_tm( apr_pool_t *p, struct tm *in_tm, struct tm **out_tm );
 
+void rpg_print_tm( struct tm *tm );
+
 void rpg_print_date( char *s, struct tm *tm );
 
 #endif

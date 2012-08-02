@@ -44,6 +44,19 @@ int rpg_clone_tm( apr_pool_t *p, struct tm *in_tm, struct tm **out_tm ) {
 	return SUCCESS;
 }
 
+void rpg_print_tm( struct tm *tm ) {
+        printf( "sec: %d\n", tm->tm_sec );
+        printf( "min: %d\n", tm->tm_min );
+        printf( "hour: %d\n", tm->tm_hour );
+        printf( "mday: %d\n", tm->tm_mday );
+        printf( "mon: %d\n", tm->tm_mon );
+        printf( "year: %d\n", tm->tm_year );
+        printf( "wday: %d\n", tm->tm_wday );
+        printf( "yday: %d\n", tm->tm_yday );
+        printf( "isdst: %d\n", tm->tm_isdst );
+}
+
+
 int rpg_cmp_tm(struct tm *t1, struct tm *t2) {
 #define CHK_LESS(l,r) if ( l < r ) { return -1; }
 #define CHK_MORE(l,r) if ( l > r ) { return 1; }
