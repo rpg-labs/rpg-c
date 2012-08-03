@@ -23,6 +23,31 @@ void testRpgStringListToString(void)
 
 }
 
+void testRpgStringListRemoveLast(void)
+{
+	int ret;
+    
+	struct _rpg_string_list *sl;
+	ret = rpg_string_list_init(p,&sl);
+	ret = rpg_string_list_add(p,sl, "one" );
+	ret = rpg_string_list_add(p,sl, "two" );
+	ret = rpg_string_list_add(p,sl, "three" );
+	
+    {
+        char *s;
+        ret = rpg_string_list_to_string( p, sl, &s );
+        CU_ASSERT_STRING_EQUAL( "onetwothree", s );
+    }
+
+    ret = rpg_string_list_remove_last(p,sl );
+    {
+        char *s;
+        ret = rpg_string_list_to_string( p, sl, &s );
+        CU_ASSERT_STRING_EQUAL( "onetwo", s );
+    }
+
+}
+
 /* The main() function for setting up and running the tests.
  * Returns a CUE_SUCCESS on successful running, another
  * CUnit error code on failure.
@@ -46,7 +71,8 @@ int main()
 
    /* add the tests to the suite */
    /* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
-   if ((NULL == CU_add_test(pSuite, "test string list to string", testRpgStringListToString))
+   if ((NULL == CU_add_test(pSuite, "test string list to string", testRpgStringListToString)) ||
+       (NULL == CU_add_test(pSuite, "test string list remove last", testRpgStringListRemoveLast))
        )
    {
       CU_cleanup_registry();

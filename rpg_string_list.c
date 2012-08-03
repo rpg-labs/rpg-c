@@ -42,6 +42,23 @@ int rpg_string_list_add(apr_pool_t *p, struct _rpg_string_list *string_list, cha
 	return SUCCESS;
 }
 
+int rpg_string_list_remove_last( apr_pool_t *p, struct _rpg_string_list *string_list ) {
+	if ( string_list->last == string_list->first ) {
+		string_list->first = NULL;
+		string_list->last = NULL;
+	} else {
+        struct _rpg_string_list_item *i=string_list->first;
+        while( i->next != string_list->last ) {
+            i = i->next;
+        }
+        i->next = NULL;
+		string_list->last = i;
+	}
+	string_list->count = string_list->count - 1;
+	
+	return SUCCESS;
+}
+
 int rpg_string_list_get(struct _rpg_string_list *string_list, int index, char **out_string) {
 	*out_string = NULL;
 	if ( string_list == NULL ) {
